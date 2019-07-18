@@ -42,14 +42,21 @@ module.exports = {
 			.then(([instructionID]) => instructionsDB.getById(instructionID).first());
 	},
 
-	addIngredToRecipe: function(recipeID, ingredientID, quantity) {
+	addIngredToRecipe: function(recipe_id, ingredient_id, quantity) {
 		return db("recipes_ingredients")
 			.insert({
-				recipe_id: recipeID,
-				ingredient_id: ingredientID,
-				quantity: quantity
+				recipe_id,
+				ingredient_id,
+				quantity
 			})
-			.then(() => this.getShoppingList(recipeID));
+			.then(() => this.getShoppingList(recipe_id));
+	},
+
+	delIngredFromRecipe: function(recipe_id, ingredient_id) {
+		return db("recipes_ingredients")
+			.where({ recipe_id, ingredient_id })
+			.del()
+			.then(count => (count > 0 ? this.getShoppingList(recipe_id) : 0));
 	},
 
 	update: function(id, changes) {

@@ -130,6 +130,38 @@ router.delete("/:id", middleware.checkRecipeId, async (req, res) => {
 	}
 });
 
+router.delete(
+	"/:id/shoppingList",
+	middleware.checkRecipeId,
+	async (req, res) => {
+		try {
+			const { ingredient_id } = req.body;
+			if (!ingredient_id) {
+				res.status(400).json({
+					message: "Please ensure information for ingredient_id is included."
+				});
+			} else {
+				const recipeIngredients = await recipesDB.delIngredFromRecipe(
+					req.params.id,
+					ingredient_id
+				);
+				if (recipeIngredients !== 0) {
+					res.status(200).json(recipeIngredients);
+				} else {
+					res.status(404).json({
+						message: "The recipe does not currently include this ingredient."
+					});
+				}
+			}
+		} catch (error) {
+			console.log(error);
+			res
+				.status(500)
+				.json({ message: "Failed to delete ingredient from recipe" });
+		}
+	}
+);
+
 //PUT
 router.put(
 	"/:id",
