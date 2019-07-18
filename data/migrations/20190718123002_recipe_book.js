@@ -33,7 +33,7 @@ exports.up = function(knex) {
 				.onDelete("CASCADE")
 				.onUpdate("CASCADE");
 			tbl
-				.integer("quantity")
+				.decimal("quantity", 2)
 				.unsigned()
 				.notNullable();
 		})
