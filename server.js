@@ -2,7 +2,7 @@ const express = require("express");
 
 const recipeRouter = require("./api/recipeRouter");
 const ingredientRouter = require("./api/ingredientRouter");
-const stepRouter = require("./api/stepRouter");
+const instructionsRouter = require("./api/instructionsRouter");
 
 const server = express();
 
@@ -14,7 +14,7 @@ server.use(express.json());
 
 server.use("/api/recipes", recipeRouter);
 server.use("/api/ingredients", ingredientRouter);
-server.use("/api/steps", stepRouter);
+server.use("/api/instructions", instructionsRouter);
 
 server.use(errorHandler);
 

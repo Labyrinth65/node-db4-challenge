@@ -1,14 +1,14 @@
 const recipeDB = require("./api/recipeModel.js");
 const ingredientDB = require("./api/ingredientModel.js");
-const stepDB = require("./api/stepModel.js");
+const instructionDB = require("./api/instructionsModel.js");
 
 module.exports = {
 	checkRecipe,
 	checkRecipeId,
 	checkIngredient,
 	checkIngredientId,
-	checkStep,
-	checkStepId
+	checkInstruction,
+	checkInstructionId
 };
 
 async function checkRecipeId(req, res, next) {
@@ -67,30 +67,31 @@ function checkIngredient(req, res, next) {
 	next();
 }
 
-async function checkStepId(req, res, next) {
+async function checkInstructionId(req, res, next) {
 	try {
-		const step = await stepDB.getById(req.params.id);
-		if (step) {
-			req.step = step;
+		const instruction = await instructionDB.getById(req.params.id);
+		if (instruction) {
+			req.instruction = instruction;
 			next();
 		} else {
-			res.status(404).json({ message: "Step ID Could Not Be Found." });
+			res.status(404).json({ message: "Instruction ID Could Not Be Found." });
 		}
 	} catch (error) {
 		console.log(error);
 		res.status(500).json({
-			error: "The step information could not be retrieved."
+			error: "The instruction information could not be retrieved."
 		});
 	}
 }
 
-function checkStep(req, res, next) {
+function checkInstruction(req, res, next) {
 	if (Object.keys(req.body).length === 0)
-		return res.status(400).json({ message: "Missing Step Data." });
-	const { recipe_id, step_number, step_name } = req.body;
-	if (!recipe_id || !step_number || !step_name)
+		return res.status(400).json({ message: "Missing Instruction Data." });
+	const { instruction_number, instruction_name } = req.body;
+	if (!instruction_number || !instruction_name)
 		return res.status(400).json({
-			message: "Please ensure information for step_name is included."
+			message:
+				"Please ensure information for instruction_number and instruction_name are included."
 		});
 	next();
 }
