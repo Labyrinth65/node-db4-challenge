@@ -36,6 +36,15 @@ module.exports = {
 			.insert({ ...instruction, recipe_id: recipeId })
 			.then(([instructionID]) => instructionsDB.getById(instructionID).first());
 	},
+	addIngredToRecipe: function(recipeID, ingredientID, quantity) {
+		return db("recipes_ingredients")
+			.insert({
+				recipe_id: recipeID,
+				ingredient_id: ingredientID,
+				quantity: quantity
+			})
+			.then(() => this.getShoppingList(recipeID));
+	},
 	update: function(id, changes) {
 		return db("recipes")
 			.where("id", id)

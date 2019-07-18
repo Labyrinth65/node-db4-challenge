@@ -30,6 +30,22 @@ router.get("/:id", middleware.checkIngredientId, async (req, res) => {
 	}
 });
 
+router.get("/:id/recipes", middleware.checkIngredientId, async (req, res) => {
+	try {
+		const recipes = await ingredientsDB.getRecipes(req.params.id);
+
+		if (recipes.length) {
+			res.json(recipes);
+		} else {
+			res
+				.status(404)
+				.json({ message: "There are no recipes listed for this ingredient." });
+		}
+	} catch (err) {
+		res.status(500).json({ message: "Failed to get recipes" });
+	}
+});
+
 router.post("/", middleware.checkIngredient, async (req, res) => {
 	try {
 		const ingredient = await ingredientsDB.insert(req.body);

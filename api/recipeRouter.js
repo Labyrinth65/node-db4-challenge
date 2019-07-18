@@ -6,6 +6,7 @@ const middleware = require("../middleware");
 
 const router = express.Router();
 
+//GET
 router.get("/", async (req, res) => {
 	try {
 		const recipes = await recipesDB.getAll(req.query);
@@ -61,6 +62,7 @@ router.get("/:id/instructions", middleware.checkRecipeId, async (req, res) => {
 	}
 });
 
+//POST
 router.post("/", middleware.checkRecipe, async (req, res) => {
 	try {
 		const recipe = await recipesDB.insert(req.body);
@@ -91,6 +93,29 @@ router.post(
 	}
 );
 
+router.post("/:id/shoppingList", middleware.checkRecipeId, async (req, res) => {
+	try {
+		const { ingredient_id, quantity } = req.body;
+		if (!ingredient_id || !quantity) {
+			res.status(400).json({
+				message:
+					"Please ensure information for ingredient_id and quantity are included."
+			});
+		} else {
+			const recipeIngredients = await recipesDB.addIngredToRecipe(
+				req.params.id,
+				ingredient_id,
+				quantity
+			);
+			res.status(201).json(recipeIngredients);
+		}
+	} catch (error) {
+		console.log(error);
+		res.status(500).json({ message: "Failed to add ingredients to recipe" });
+	}
+});
+
+//DELETE
 router.delete("/:id", middleware.checkRecipeId, async (req, res) => {
 	try {
 		const count = await recipesDB.remove(req.params.id);
@@ -105,6 +130,7 @@ router.delete("/:id", middleware.checkRecipeId, async (req, res) => {
 	}
 });
 
+//PUT
 router.put(
 	"/:id",
 	middleware.checkRecipeId,
