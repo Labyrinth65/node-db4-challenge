@@ -30,18 +30,6 @@ router.get("/:id", middleware.checkInstructionId, async (req, res) => {
 	}
 });
 
-router.post("/", middleware.checkInstruction, async (req, res) => {
-	try {
-		const instruction = await instructionsDB.insert(req.body);
-		res.status(201).json(instruction);
-	} catch (error) {
-		console.log(error);
-		res.status(500).json({
-			error: "There was an error while adding the instruction to the database"
-		});
-	}
-});
-
 router.delete("/:id", middleware.checkInstructionId, async (req, res) => {
 	try {
 		const count = await instructionsDB.remove(req.params.id);

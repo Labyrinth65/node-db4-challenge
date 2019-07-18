@@ -9,11 +9,6 @@ module.exports = {
 			.where("id", id)
 			.first();
 	},
-	insert: function(recipe) {
-		return db("steps")
-			.insert(recipe)
-			.then(([id]) => this.getById(id).first());
-	},
 	update: function(id, changes) {
 		return db("steps")
 			.where("id", id)

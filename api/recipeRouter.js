@@ -29,6 +29,38 @@ router.get("/:id", middleware.checkRecipeId, async (req, res) => {
 	}
 });
 
+router.get("/:id/shoppingList", middleware.checkRecipeId, async (req, res) => {
+	try {
+		const ingredients = await recipesDB.getShoppingList(req.params.id);
+
+		if (ingredients.length) {
+			res.json(ingredients);
+		} else {
+			res
+				.status(404)
+				.json({ message: "There are no ingredients listed for this recipe." });
+		}
+	} catch (err) {
+		res.status(500).json({ message: "Failed to get ingredients" });
+	}
+});
+
+router.get("/:id/instructions", middleware.checkRecipeId, async (req, res) => {
+	try {
+		const instructions = await recipesDB.getInstructions(req.params.id);
+
+		if (instructions.length) {
+			res.json(instructions);
+		} else {
+			res
+				.status(404)
+				.json({ message: "There are no instructions for this recipe." });
+		}
+	} catch (err) {
+		res.status(500).json({ message: "Failed to get instructions" });
+	}
+});
+
 router.post("/", middleware.checkRecipe, async (req, res) => {
 	try {
 		const recipe = await recipesDB.insert(req.body);
@@ -40,6 +72,24 @@ router.post("/", middleware.checkRecipe, async (req, res) => {
 		});
 	}
 });
+
+router.post(
+	"/:id/instructions",
+	middleware.checkRecipeId,
+	middleware.checkInstruction,
+	async (req, res) => {
+		try {
+			const instruction = await recipesDB.insertInstruction(
+				req.params.id,
+				req.body
+			);
+			res.status(201).json(instruction);
+		} catch (error) {
+			console.log(error);
+			res.status(500).json({ message: "Failed to create new instruction" });
+		}
+	}
+);
 
 router.delete("/:id", middleware.checkRecipeId, async (req, res) => {
 	try {

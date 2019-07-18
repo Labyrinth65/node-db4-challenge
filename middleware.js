@@ -87,11 +87,11 @@ async function checkInstructionId(req, res, next) {
 function checkInstruction(req, res, next) {
 	if (Object.keys(req.body).length === 0)
 		return res.status(400).json({ message: "Missing Instruction Data." });
-	const { instruction_number, instruction_name } = req.body;
-	if (!instruction_number || !instruction_name)
+	const { step_number, step_name } = req.body;
+	if (!step_number || !step_name)
 		return res.status(400).json({
 			message:
-				"Please ensure information for instruction_number and instruction_name are included."
+				"Please ensure information for step_number and step_name are included."
 		});
 	next();
 }
